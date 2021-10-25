@@ -5,6 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+<<<<<<< HEAD
+=======
+import android.widget.ProgressBar
+>>>>>>> master
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -48,6 +52,13 @@ class FollowingFragment : Fragment() {
 
         mainViewModel.findUserFollowing(arguments?.getString(ARG_USER_DATA).toString())
 
+<<<<<<< HEAD
+=======
+        mainViewModel.isLoading.observe(viewLifecycleOwner, {
+            showLoading(it)
+        })
+
+>>>>>>> master
         mainViewModel.following.observe(viewLifecycleOwner, { following ->
             setUserFollowing(following)
         })
@@ -61,4 +72,16 @@ class FollowingFragment : Fragment() {
         rvFollowing?.adapter = adapter
     }
 
+<<<<<<< HEAD
+=======
+    private fun showLoading(isLoading: Boolean) {
+        val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
+        if(isLoading) {
+            progressBar?.visibility = View.VISIBLE
+        } else {
+            progressBar?.visibility = View.GONE
+        }
+    }
+
+>>>>>>> master
 }

@@ -5,6 +5,16 @@
     android:layout_height="match_parent"
     tools:context=".FollowingFragment">
 
+<<<<<<< HEAD
+=======
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+>>>>>>> master
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvFollowing"
         android:layout_width="match_parent"
