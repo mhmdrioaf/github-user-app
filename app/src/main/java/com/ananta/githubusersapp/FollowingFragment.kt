@@ -5,83 +5,86 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-<<<<<<< HEAD
-=======
-import android.widget.ProgressBar
->>>>>>> master
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.ananta.githubusersapp.databinding.FragmentFollowingBinding
 
 class FollowingFragment : Fragment() {
 
-    companion object {
-        private const val ARG_SECTION_NUMBER = "section_number"
-        private const val ARG_USER_DATA = "user_data"
-
-        @JvmStatic
-        fun newInstance(index: Int, getUserData: String) =
-            FollowingFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_SECTION_NUMBER, index)
-                    putString(ARG_USER_DATA, getUserData)
-                }
-            }
-    }
+    private lateinit var binding: FragmentFollowingBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        binding = FragmentFollowingBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        val view: View = inflater.inflate(R.layout.fragment_following, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val layoutManager = LinearLayoutManager(context)
-        val rvFollowing = view.findViewById<RecyclerView>(R.id.rvFollowing)
-        rvFollowing.layoutManager = layoutManager
+        binding.rvFollowing.layoutManager = layoutManager
         val itemDecoration = DividerItemDecoration(context, layoutManager.orientation)
-        rvFollowing.addItemDecoration(itemDecoration)
+        binding.rvFollowing.addItemDecoration(itemDecoration)
 
-        rvFollowing.setHasFixedSize(true)
+        binding.rvFollowing.setHasFixedSize(true)
 
-        val mainViewModel = ViewModelProvider(
+        val detailViewModel = ViewModelProvider(
             this,
             ViewModelProvider.NewInstanceFactory()
-        ).get(MainViewModel::class.java)
+        ).get(DetailViewModel::class.java)
 
-        mainViewModel.findUserFollowing(arguments?.getString(ARG_USER_DATA).toString())
+        detailViewModel.findUserFollowing(arguments?.getString(ARG_USER_DATA).toString())
 
-<<<<<<< HEAD
-=======
-        mainViewModel.isLoading.observe(viewLifecycleOwner, {
+        detailViewModel.isLoading.observe(viewLifecycleOwner, {
             showLoading(it)
         })
 
->>>>>>> master
-        mainViewModel.following.observe(viewLifecycleOwner, { following ->
-            setUserFollowing(following)
+        detailViewModel.following.observe(viewLifecycleOwner, { following ->
+            if (following != null) {
+                setUserFollowing(following)
+            }
         })
 
-        return view
+        detailViewModel.isEmpty.observe(viewLifecycleOwner, { isEmpty ->
+            setEmptyFollowing(isEmpty)
+        })
+
+        super.onViewCreated(view, savedInstanceState)
     }
 
     private fun setUserFollowing(result: List<PersonItem>) {
         val adapter = PersonAdapter(result)
-        val rvFollowing = view?.findViewById<RecyclerView>(R.id.rvFollowing)
-        rvFollowing?.adapter = adapter
+        binding.rvFollowing.adapter = adapter
     }
 
-<<<<<<< HEAD
-=======
     private fun showLoading(isLoading: Boolean) {
-        val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
         if(isLoading) {
-            progressBar?.visibility = View.VISIBLE
+            binding.progressBar.visibility = View.VISIBLE
         } else {
-            progressBar?.visibility = View.GONE
+            binding.progressBar.visibility = View.GONE
         }
     }
 
->>>>>>> master
+    private fun setEmptyFollowing(isEmpty: Boolean) {
+        if(isEmpty) {
+            binding.tvEmptyFollowing.visibility = View.VISIBLE
+        } else {
+            binding.tvEmptyFollowing.visibility = View.INVISIBLE
+        }
+    }
+
+    companion object {
+        private const val ARG_USER_DATA = "user_data"
+
+        @JvmStatic
+        fun newInstance(getUserData: String) =
+            FollowingFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_USER_DATA, getUserData)
+                }
+            }
+    }
 }

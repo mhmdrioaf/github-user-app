@@ -28,8 +28,6 @@ class PersonAdapter(private val listUser: List<PersonItem>) :
 
     }
 
-    override fun getItemCount(): Int {
-        return listUser.size
-    }
+    override fun getItemCount(): Int = listUser.size
 
 }

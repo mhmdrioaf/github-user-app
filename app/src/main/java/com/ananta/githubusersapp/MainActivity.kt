@@ -43,6 +43,10 @@ class MainActivity : AppCompatActivity() {
             setUserData(result)
         })
 
+        mainViewModel.isEmpty.observe(this, { isEmpty ->
+            setEmptyUserData(isEmpty)
+        })
+
         mainViewModel.isLoading.observe(this, {
             showLoading(it)
         })
@@ -55,6 +59,7 @@ class MainActivity : AppCompatActivity() {
             this,
             ViewModelProvider.NewInstanceFactory()
         ).get(MainViewModel::class.java)
+
         val inflater = menuInflater
         inflater.inflate(R.menu.option_menu, menu)
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
@@ -98,6 +103,14 @@ class MainActivity : AppCompatActivity() {
                 showUserDetail(data)
             }
         })
+    }
+
+    private fun setEmptyUserData(isEmpty: Boolean) {
+        if(isEmpty) {
+            binding.tvNotFound.visibility = View.VISIBLE
+        } else {
+            binding.tvNotFound.visibility = View.INVISIBLE
+        }
     }
 
     // Fungsi untuk mengirim data User ke User Detail Activity

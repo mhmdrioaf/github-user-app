@@ -12,8 +12,8 @@ class SectionsPagerAdapter(activity: AppCompatActivity, private val getUserData:
 
         var fragment: Fragment? = null
         when (position) {
-            0 -> fragment = FollowerFragment.newInstance(0, getUserData)
-            1 -> fragment = FollowingFragment.newInstance(1, getUserData)
+            0 -> fragment = FollowerFragment.newInstance(getUserData)
+            1 -> fragment = FollowingFragment.newInstance(getUserData)
         }
         return fragment as Fragment
     }

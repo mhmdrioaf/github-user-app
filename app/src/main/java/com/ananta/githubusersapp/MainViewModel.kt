@@ -13,14 +13,8 @@ class MainViewModel : ViewModel() {
     private val _result = MutableLiveData<List<Result>>()
     val result: MutableLiveData<List<Result>> = _result
 
-    private val _detail = MutableLiveData<UserResponse>()
-    val detail: MutableLiveData<UserResponse> = _detail
-
-    private val _followers = MutableLiveData<List<PersonItem>>()
-    val followers: MutableLiveData<List<PersonItem>> = _followers
-
-    private val _following = MutableLiveData<List<PersonItem>>()
-    val following: MutableLiveData<List<PersonItem>> = _following
+    private val _isEmpty = MutableLiveData<Boolean>()
+    val isEmpty: MutableLiveData<Boolean> = _isEmpty
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -48,7 +42,13 @@ class MainViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     if (responseBody != null) {
-                        _result.value = responseBody.items
+                        if(responseBody.totalCount < 1) {
+                            _isEmpty.value = true
+                            _result.value = responseBody.items
+                        } else {
+                            _isEmpty.value = false
+                            _result.value = responseBody.items
+                        }
                     } else {
                         Log.e(TAG, "onFailure: ${response.message()}")
                     }
@@ -56,93 +56,6 @@ class MainViewModel : ViewModel() {
             }
 
             override fun onFailure(call: Call<UserSearchResponse>, t: Throwable) {
-                _isLoading.value = false
-                Log.e(TAG, "onFailure: ${t.message.toString()}")
-            }
-        })
-    }
-
-    /*
-
-    Fungsi untuk mendapatkan user detail
-
-     */
-
-    fun findUserDetail(userId: String) {
-        _isLoading.value = true
-        val client = ApiConfig.getApiService().getUserDetail(userId)
-        client.enqueue(object : Callback<UserResponse> {
-            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
-                _isLoading.value = false
-                if (response.isSuccessful) {
-                    val responseBody = response.body()
-                    if (responseBody != null) {
-                        _detail.value = responseBody
-                    } else {
-                        Log.e(TAG, "onFailure: ${response.message()}")
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                _isLoading.value = false
-                Log.e(TAG, "onFailure: ${t.message.toString()}")
-            }
-        })
-    }
-
-    /*
-
-    Fungsi untuk mendapatkan data followers
-
-     */
-
-    fun findUserFollowers(userId: String) {
-        _isLoading.value = true
-        val client = ApiConfig.getApiService().getUserFollowers(userId)
-        client.enqueue(object : Callback<List<PersonItem>> {
-            override fun onResponse(
-                call: Call<List<PersonItem>>,
-                response: Response<List<PersonItem>>
-            ) {
-                _isLoading.value = false
-                if (response.isSuccessful) {
-                    val responseBody = response.body()
-                    if (responseBody != null) {
-                        _followers.value = responseBody
-                    } else {
-                        Log.e(TAG, "onFailure: ${response.message()}")
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<List<PersonItem>>, t: Throwable) {
-                _isLoading.value = false
-                Log.e(TAG, "onFailure: ${t.message.toString()}")
-            }
-        })
-    }
-
-    fun findUserFollowing(userId: String) {
-        _isLoading.value = true
-        val client = ApiConfig.getApiService().getUserFollowing(userId)
-        client.enqueue(object : Callback<List<PersonItem>> {
-            override fun onResponse(
-                call: Call<List<PersonItem>>,
-                response: Response<List<PersonItem>>
-            ) {
-                _isLoading.value = false
-                if (response.isSuccessful) {
-                    val responseBody = response.body()
-                    if (responseBody != null) {
-                        _following.value = responseBody
-                    } else {
-                        Log.e(TAG, "onFailure: ${response.message()}")
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<List<PersonItem>>, t: Throwable) {
                 _isLoading.value = false
                 Log.e(TAG, "onFailure: ${t.message.toString()}")
             }

@@ -15,16 +15,6 @@ class UserDetailActivity : AppCompatActivity() {
 
     private lateinit var activityDetailBinding: ActivityUserDetailBinding
 
-    companion object {
-        @StringRes
-        private val TAB_TITLES = intArrayOf(
-            R.string.tab_text_1,
-            R.string.tab_text_2,
-        )
-
-        const val EXTRA_USERNAME = "username"
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityDetailBinding = ActivityUserDetailBinding.inflate(layoutInflater)
@@ -34,21 +24,23 @@ class UserDetailActivity : AppCompatActivity() {
         supportActionBar?.elevation = 0f
 
 
-        val mainViewModel = ViewModelProvider(
+        val detailViewModel = ViewModelProvider(
             this,
             ViewModelProvider.NewInstanceFactory()
-        ).get(MainViewModel::class.java)
+        ).get(DetailViewModel::class.java)
 
-        mainViewModel.isLoading.observe(this, {
+        detailViewModel.isLoading.observe(this, {
             showLoading(it)
         })
 
-        mainViewModel.detail.observe(this, { detail ->
-            setUserDetail(detail)
+        detailViewModel.detail.observe(this, { detail ->
+            if (detail != null) {
+                setUserDetail(detail)
+            }
         })
 
         val username = intent.getStringExtra(EXTRA_USERNAME)
-        mainViewModel.findUserDetail(username.toString())
+        detailViewModel.findUserDetail(username.toString())
 
         supportActionBar?.title = username
 
@@ -83,4 +75,15 @@ class UserDetailActivity : AppCompatActivity() {
             .load(detail.avatarUrl)
             .into(activityDetailBinding.profilePicture)
     }
+
+    companion object {
+        @StringRes
+        private val TAB_TITLES = intArrayOf(
+            R.string.tab_text_1,
+            R.string.tab_text_2,
+        )
+
+        const val EXTRA_USERNAME = "username"
+    }
+
 }
