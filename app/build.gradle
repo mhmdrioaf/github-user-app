@@ -11,6 +11,9 @@ android {
     }
 
     defaultConfig {
+
+        buildConfigField("String", "KEY", '"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"')
+
         applicationId "com.ananta.githubusersapp"
         minSdk 21
         targetSdk 31
